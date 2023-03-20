@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import experienceRouter from "./api/experience/index.js";
 
 import userRouter from "./api/user/index.js";
+import pdfDownloadRouter from "./api/files/userCV.js";
 
 import postsRouter from "./api/posts/index.js";
 import {
@@ -13,7 +14,6 @@ import {
   notFoundHandler,
   genericErrorHandler,
 } from "./errorHandlers.js";
-
 
 const server = Express();
 
@@ -27,14 +27,12 @@ server.use(Express.json());
 
 // ENDPOINTS
 
-
 server.use("/users", experienceRouter);
+server.use("/profile", pdfDownloadRouter);
 
 server.use("/users", userRouter);
 
-
 server.use("/posts", postsRouter);
-
 
 // ERROR HANDLERS
 server.use(badRequestHandler);

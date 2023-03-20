@@ -86,25 +86,21 @@ const cloudinaryUploader = multer({
   }),
 }).single("userImg");
 
-userRouter.put(
-  "/upload/:userId",
-  cloudinaryUploader,
-  async (req, res, next) => {
-    try {
-      const updatedUser = await UserModel.findByIdAndUpdate(
-        req.params.userId,
-        { image: req.file.path },
-        { new: true, runValidators: true }
-      );
-      if (updatedUser) {
-        res.send(updatedUser);
-      } else {
-        res.status(404).send("User with that id doesn't exist");
-      }
-    } catch (error) {
-      next(error);
+userRouter.put("/:userId/image", cloudinaryUploader, async (req, res, next) => {
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.params.userId,
+      { image: req.file.path },
+      { new: true, runValidators: true }
+    );
+    if (updatedUser) {
+      res.send(updatedUser);
+    } else {
+      res.status(404).send("User with that id doesn't exist");
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 export default userRouter;
