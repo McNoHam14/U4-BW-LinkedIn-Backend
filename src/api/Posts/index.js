@@ -1,17 +1,32 @@
 import express from "express";
 import PostsModel from "./model.js";
 import createHttpError from "http-errors";
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+import q2m from "query-to-mongo";
 
 const postsRouter = express.Router();
 
+const cloudinaryUploader = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "linkedIn/postImg",
+    },
+  }),
+}).single("postImg");
+
 postsRouter.get("/", async (req, res, next) => {
   try {
-    const posts = await PostsModel.find();
-    res
-      .send(posts)
-      .populate({ path: "user", select: "name" })
-      .populate({ path: "user", select: "surname" })
-      .populate({ path: "user", select: "image" });
+    const mongoQuery = q2m(req.query);
+    const { posts, total } = await PostsModel.enablePostFilter(mongoQuery);
+    res.send({
+      links: mongoQuery.links(`${process.env.FE_PROD_URL}/posts`, total),
+      total,
+      numberOfPages: Math.ceil(total / mongoQuery.options.limit),
+      posts,
+    });
   } catch (error) {
     next(error);
   }
@@ -19,13 +34,12 @@ postsRouter.get("/", async (req, res, next) => {
 
 postsRouter.get("/:id", async (req, res, next) => {
   try {
-    const post = await PostsModel.findById(req.params.id);
+    const post = await PostsModel.findById(req.params.id).populate({
+      path: "user",
+      select: "name surname image",
+    });
     if (post) {
-      res
-        .send(post)
-        .populate({ path: "user", select: "name" })
-        .populate({ path: "user", select: "surname" })
-        .populate({ path: "user", select: "image" });
+      res.send(post);
     } else {
       next(createHttpError(404, `Post with id ${req.params.id} not found!`));
     }
@@ -79,11 +93,11 @@ postsRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-postsRouter.post("/:id/image", async (req, res, next) => {
+postsRouter.post("/:id/image", cloudinaryUploader, async (req, res, next) => {
   try {
     const updatedPost = await PostsModel.findById(req.params.id);
     if (updatedPost) {
-      updatedPost.image = req.body.image;
+      updatedPost.image = req.file.path;
       await updatedPost.save();
       res.status(201).send(updatedPost.image);
     } else {
