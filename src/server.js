@@ -3,6 +3,8 @@ import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
 
+import experienceRouter from "./api/experience/index.js";
+
 import userRouter from "./api/user/index.js";
 
 import postsRouter from "./api/posts/index.js";
@@ -25,7 +27,11 @@ server.use(Express.json());
 
 // ENDPOINTS
 
-server.use("/user", userRouter);
+
+server.use("/users", experienceRouter);
+
+server.use("/users", userRouter);
+
 
 server.use("/posts", postsRouter);
 
