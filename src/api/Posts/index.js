@@ -6,12 +6,11 @@ const postsRouter = express.Router();
 
 postsRouter.get("/", async (req, res, next) => {
   try {
-    const posts = await PostsModel.find();
-    res
-      .send(posts)
-      .populate({ path: "user", select: "name" })
-      .populate({ path: "user", select: "surname" })
-      .populate({ path: "user", select: "image" });
+    const posts = await PostsModel.find().populate({
+      path: "user",
+      select: "name surname image",
+    });
+    res.send(posts);
   } catch (error) {
     next(error);
   }
@@ -19,13 +18,12 @@ postsRouter.get("/", async (req, res, next) => {
 
 postsRouter.get("/:id", async (req, res, next) => {
   try {
-    const post = await PostsModel.findById(req.params.id);
+    const post = await PostsModel.findById(req.params.id).populate({
+      path: "user",
+      select: "name surname image",
+    });
     if (post) {
-      res
-        .send(post)
-        .populate({ path: "user", select: "name" })
-        .populate({ path: "user", select: "surname" })
-        .populate({ path: "user", select: "image" });
+      res.send(post);
     } else {
       next(createHttpError(404, `Post with id ${req.params.id} not found!`));
     }
