@@ -17,6 +17,8 @@ server.use(Express.json());
 
 // ENDPOINTS
 
+server.use("/users", experienceRouter);
+
 // ERROR HANDLERS
 
 mongoose.connect(process.env.MONGO_URL);
