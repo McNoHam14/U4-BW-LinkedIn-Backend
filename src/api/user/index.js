@@ -1,11 +1,11 @@
-import Express from "express";
+import express from "express";
 import q2m from "query-to-mongo";
 import UserModel from "./model.js";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 
-const userRouter = Express.Router();
+const userRouter = express.Router();
 
 userRouter.post("/", async (req, res, next) => {
   try {
