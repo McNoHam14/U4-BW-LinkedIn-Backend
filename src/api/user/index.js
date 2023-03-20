@@ -5,15 +5,6 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 
-const cloudinaryUploader = multer({
-  storage: new CloudinaryStorage({
-    cloudinary,
-    params: {
-      folder: "linkedIn/userImg",
-    },
-  }),
-}).single("userImg");
-
 const userRouter = Express.Router();
 
 userRouter.post("/", async (req, res, next) => {
@@ -85,6 +76,15 @@ userRouter.delete("/:userId", async (req, res, next) => {
 });
 
 //--------------------------------------------- Image Upload ------------------------------------------------
+
+const cloudinaryUploader = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "linkedIn/userImg",
+    },
+  }),
+}).single("userImg");
 
 userRouter.put(
   "/upload/:userId",
