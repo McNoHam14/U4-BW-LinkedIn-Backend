@@ -2,12 +2,16 @@ import Express from "Express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
+
+import userRouter from "./api/user/index.js";
+
 import postsRouter from "./api/posts/index.js";
 import {
   badRequestHandler,
   notFoundHandler,
   genericErrorHandler,
 } from "./errorHandlers.js";
+
 
 const server = Express();
 
@@ -20,7 +24,11 @@ server.use(cors());
 server.use(Express.json());
 
 // ENDPOINTS
+
+server.use("/user", userRouter);
+
 server.use("/posts", postsRouter);
+
 
 // ERROR HANDLERS
 server.use(badRequestHandler);
