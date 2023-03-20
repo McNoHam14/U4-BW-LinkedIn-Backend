@@ -1,4 +1,4 @@
-import Express from "express";
+import express from "express";
 import { getPDFReadableStream } from "../../lib/pdf-tools.js";
 import { pipeline } from "stream";
 import UserModel from "../user/model.js";

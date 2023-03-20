@@ -1,4 +1,4 @@
-import Express from "express";
+import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -15,7 +15,7 @@ import {
   genericErrorHandler,
 } from "./errorHandlers.js";
 
-const server = Express();
+const server = express();
 
 const port = process.env.PORT || 3001;
 
@@ -23,7 +23,7 @@ const port = process.env.PORT || 3001;
 
 server.use(cors());
 
-server.use(Express.json());
+server.use(express.json());
 
 // ENDPOINTS
 
