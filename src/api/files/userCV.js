@@ -3,7 +3,7 @@ import { getPDFReadableStream } from "../../lib/pdf-tools.js";
 import { pipeline } from "stream";
 import UserModel from "../user/model.js";
 
-const pdfDownloadRouter = Express.Router();
+const pdfDownloadRouter = express.Router();
 
 pdfDownloadRouter.get("/users/:userId/CV", async (req, res, next) => {
   try {
