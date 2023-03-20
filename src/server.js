@@ -2,6 +2,7 @@ import Express from "Express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
+import userRouter from "./api/user/index.js";
 
 const server = Express();
 
@@ -14,6 +15,7 @@ server.use(cors());
 server.use(Express.json());
 
 // ENDPOINTS
+server.use("/user", userRouter);
 
 // ERROR HANDLERS
 
