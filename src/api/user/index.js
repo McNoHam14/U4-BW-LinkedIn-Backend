@@ -1,6 +1,18 @@
 import Express from "express";
 import q2m from "query-to-mongo";
 import UserModel from "./model.js";
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+
+const cloudinaryUploader = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "linkedIn/userImg",
+    },
+  }),
+}).single("userImg");
 
 const userRouter = Express.Router();
 
@@ -74,16 +86,25 @@ userRouter.delete("/:userId", async (req, res, next) => {
 
 //--------------------------------------------- Image Upload ------------------------------------------------
 
-userRouter.put("/:userId/upload", async (req, res, next) => {
-  try {
-    if (updatedUser) {
-      res.status(200).send(updatedUser);
-    } else {
-      res.status(404).send("User with that id doesn't exist");
+userRouter.put(
+  "/upload/:userId",
+  cloudinaryUploader,
+  async (req, res, next) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        req.params.userId,
+        { image: req.file.path },
+        { new: true, runValidators: true }
+      );
+      if (updatedUser) {
+        res.send(updatedUser);
+      } else {
+        res.status(404).send("User with that id doesn't exist");
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 export default userRouter;
