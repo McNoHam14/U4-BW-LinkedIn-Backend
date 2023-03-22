@@ -12,10 +12,10 @@ const cloudinaryUploader = multer({
   storage: new CloudinaryStorage({
     cloudinary,
     params: {
-      folder: "linkedIn/postImg",
+      folder: "linkedIn/postImage",
     },
   }),
-}).single("postImg");
+}).single("postImage");
 
 postsRouter.get("/", async (req, res, next) => {
   try {
@@ -52,7 +52,7 @@ postsRouter.post("/", async (req, res, next) => {
   try {
     const newPost = new PostsModel(req.body);
     const savedPost = await newPost.save();
-    res.status(201).send("Post successfully published");
+    res.status(201).send(savedPost);
   } catch (error) {
     next(error);
   }
@@ -99,7 +99,7 @@ postsRouter.post("/:id/image", cloudinaryUploader, async (req, res, next) => {
     if (updatedPost) {
       updatedPost.image = req.file.path;
       await updatedPost.save();
-      res.status(201).send(updatedPost.image);
+      res.status(201).send(updatedPost);
     } else {
       next(createHttpError(404, "Post with this ID not found"));
     }
