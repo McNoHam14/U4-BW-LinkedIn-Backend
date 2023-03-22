@@ -14,6 +14,8 @@ const postsSchema = new Schema(
       default:
         "https://images.unsplash.com/photo-1585288766827-c62e98d70191?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+    likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],
   },
   {
     timestamps: true,

@@ -11,6 +11,7 @@ const userSchema = new Schema(
     title: { type: String },
     area: { type: String },
     image: { type: String, default: "default-image-url-here" },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
   },
   {
     timestamps: true,
