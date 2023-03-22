@@ -11,6 +11,18 @@ const userSchema = new Schema(
     title: { type: String },
     area: { type: String },
     image: { type: String, default: "default-image-url-here" },
+    friendRequests: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    acceptedFriends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
