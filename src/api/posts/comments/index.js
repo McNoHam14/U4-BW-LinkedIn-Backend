@@ -14,12 +14,12 @@ commentsRouter.post("/:postId/comments", async (req, res, next) => {
     await PostModel.findByIdAndUpdate(
       req.params.postId,
       { $push: { comments: _id } },
-      { new: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true }
     );
     await UserModel.findByIdAndUpdate(
       req.body.userId,
       { $push: { comments: _id } },
-      { new: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true }
     );
     res.status(201).send({ id: _id });
   } catch (error) {

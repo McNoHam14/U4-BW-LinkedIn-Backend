@@ -11,7 +11,7 @@ likesRouter.post("/:postId/like", async (req, res, next) => {
     const postAfter = await PostModel.findByIdAndUpdate(
       req.params.postId,
       { $addToSet: { likes: req.body.userId } },
-      { new: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true }
     );
 
     if (postBefore.likes.toString() !== postAfter.likes.toString()) {
