@@ -18,7 +18,7 @@ likesRouter.post("/:postId/like", async (req, res, next) => {
       const newLike = await LikeModel(req.body);
       newLike.postId = new mongoose.Types.ObjectId(req.params.postId);
       const { _id } = await newLike.save();
-      res.status(201).send({ id: _id });
+      res.status(201).send(_id);
     } else {
       res.send(`Already Liked`);
     }
@@ -27,9 +27,25 @@ likesRouter.post("/:postId/like", async (req, res, next) => {
   }
 });
 
-likesRouter.delete("/:likeId/like", async (req, res, next) => {
+likesRouter.get("/:postId/like", async (req, res, next) => {
   try {
-    const like = await LikeModel.findById(req.params.likeId);
+    let post = await PostModel.findById(req.params.postId);
+    if (post) {
+      res.status(200).send(post.likes);
+    } else {
+      res.send(`Post doesn't exist`);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+likesRouter.delete("/:postId/like/:userId", async (req, res, next) => {
+  try {
+    const like = await LikeModel.findOne({
+      userId: req.params.userId,
+      postId: req.params.postId,
+    });
     const userId = like.userId;
 
     await LikeModel.findByIdAndDelete(req.params.likeId);
