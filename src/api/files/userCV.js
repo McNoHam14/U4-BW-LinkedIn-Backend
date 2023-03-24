@@ -7,6 +7,7 @@ const pdfDownloadRouter = express.Router();
 
 pdfDownloadRouter.get("/users/:userId/CV", async (req, res, next) => {
   try {
+    res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=user_CV.pdf");
 
     const user = await UserModel.findById(req.params.userId);
